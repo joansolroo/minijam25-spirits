@@ -10031,7 +10031,7 @@ MonoBehaviour:
   currentLevel: {fileID: 0}
   outro: {fileID: 157667747}
   playing: 0
-  debug: 1
+  debug: 0
 --- !u!4 &870590213
 Transform:
   m_ObjectHideFlags: 0
