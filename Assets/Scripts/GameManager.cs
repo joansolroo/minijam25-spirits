@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     [SerializeField] Animation introduction;
     [SerializeField] float introductionDuration;
@@ -13,17 +14,20 @@ public class GameManager : MonoBehaviour {
     [SerializeField] bool playing;
 
     static GameManager instance;
+
+    [SerializeField] bool debug = false;
     void Awake()
     {
         instance = this;
     }
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         StartCoroutine(Introduction());
-	}
+    }
 
     int state = 0;
-	// Update is called once per frame
+    // Update is called once per frame
 
     public static void End()
     {
@@ -35,7 +39,7 @@ public class GameManager : MonoBehaviour {
     {
         instance.StartCoroutine(instance.DoRestart());
     }
-    
+
     void restart()
     {
         if (currentLevel != null)
@@ -54,9 +58,18 @@ public class GameManager : MonoBehaviour {
     }
     IEnumerator Introduction()
     {
-        introduction.gameObject.SetActive(true);
-        level.SetActive(false);
-        yield return new WaitForSeconds(introductionDuration);
+        if (!debug)
+        {
+            introduction.gameObject.SetActive(true);
+            level.SetActive(false);
+            yield return new WaitForSeconds(introductionDuration);
+
+        }
+        else
+        {
+            introduction.gameObject.SetActive(false);
+            level.SetActive(false);
+        }
         restart();
     }
 }
