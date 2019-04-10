@@ -25,10 +25,11 @@ public class Weapon : MonoBehaviour
     [SerializeField] AudioClip clipReload;
 
     [SerializeField] int hand;
+    [SerializeField] SpriteRenderer sprite;
     // Use this for initialization
     void Start()
     {
-
+        sprite = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -53,8 +54,13 @@ public class Weapon : MonoBehaviour
         }
         else
         {
+            load = capacity;
             this.gameObject.SetActive(true);
         }
+    }
+    public bool IsActive()
+    {
+        return gameObject.activeSelf;
     }
     bool failShot = false;
     float lastFire = 0;
@@ -104,6 +110,7 @@ public class Weapon : MonoBehaviour
                 }
                 --load;
                 audioSource.PlayOneShot(clipFire);
+                
                 float t = 0;
                 float r = 0;
                 while (t < cooldown / 2)
@@ -122,6 +129,10 @@ public class Weapon : MonoBehaviour
 
                 }
                 this.transform.parent.localEulerAngles = new Vector3(0, 0, 0);
+                if(load == 0)
+                {
+                    Reload();
+                }
             }
             firing = false;
         }
@@ -150,11 +161,13 @@ public class Weapon : MonoBehaviour
                 if (reloading)
                 {
                     audioSource.PlayOneShot(clipReload);
+                    sprite.color = new Color(1,0,0,0.5f);
                     load++;
-                    yield return new WaitForSeconds(loadTime );
+                    yield return new WaitForSeconds(loadTime);
                 }
             }
             reloading = false;
+            sprite.color = controller.color;
         }
     }
 }

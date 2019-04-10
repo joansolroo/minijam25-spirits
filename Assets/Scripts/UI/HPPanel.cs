@@ -7,6 +7,7 @@ public class HPPanel : MonoBehaviour {
 
     [SerializeField] CharacterController2D player;
     [SerializeField] GameObject[] hpRenderers;
+    [SerializeField] HPToken[] hpRendererTokens;
 
     [SerializeField] AudioSource audioSource;
     [SerializeField] AudioClip hpUp;
@@ -15,7 +16,13 @@ public class HPPanel : MonoBehaviour {
     int hp;
     // Use this for initialization
 	void Start () {
+        hpRendererTokens = new HPToken[hpRenderers.Length];
+        for (int r = 0; r < hpRenderers.Length; ++r)
+        {
+            hpRendererTokens[r] = hpRenderers[r].GetComponent<HPToken>();
+        }
         hp = (int)player.hp;
+        
         UpdateBar();
 
     }
@@ -42,7 +49,15 @@ public class HPPanel : MonoBehaviour {
     {
         for (int h = 0; h < hpRenderers.Length; ++h)
         {
-            hpRenderers[h].SetActive((h == hp));
+            if((h == hp))
+            {
+                hpRendererTokens[h].Show();
+            }
+            else
+            {
+                hpRendererTokens[h].Hide();
+            }
+           
         }
     }
 }

@@ -44,8 +44,16 @@ public class CharacterController2D : MonoBehaviour
     }
     Vector2 movement;
 
+    public Vector2 aimAt;
     public void AimAt(Vector2 target)
     {
+        Vector2 newAimAt = target - new Vector2(this.transform.position.x, this.transform.position.y);
+        newAimAt = newAimAt.normalized * Mathf.Min(5,Mathf.Max(newAimAt.magnitude, 0.25f));
+        if(currentWeapon == -1) { newAimAt *= 0.1f; }
+        else if (currentWeapon < 2) { newAimAt *= 0.25f; }
+        else if (currentWeapon == 2) { newAimAt *= 0.15f; }
+        else if (currentWeapon == 3) { newAimAt *= 0.4f; }
+        aimAt = Vector2.MoveTowards(aimAt, newAimAt, 10*Time.deltaTime);
         CheckWeapon();
         direction = target.x < transform.position.x ? -1 : 1;
         if (weapon != null && weapon.Length > 0)
@@ -97,8 +105,8 @@ public class CharacterController2D : MonoBehaviour
         }
         if (weapon != null)
         {
-            if (weapon.Length == 1) weapon[0].SetActive(true);
-            if (weapon.Length == 2) weapon[1].SetActive(true);
+            if (weapon.Length == 1 && !weapon[0].IsActive()) weapon[0].SetActive(true);
+            if (weapon.Length == 2 && !weapon[1].IsActive()) weapon[1].SetActive(true);
         }
     }
 
@@ -113,6 +121,7 @@ public class CharacterController2D : MonoBehaviour
         }*/
         //Call the AddForce function of our Rigidbody2D rb2d supplying movement multiplied by speed to move our player.
         rb2d.velocity =  movement*speed;
+        
         //rb2d.AddForce(delta.normalized * Mathf.Min(delta.magnitude, speed) * d);
     }
 
@@ -120,8 +129,8 @@ public class CharacterController2D : MonoBehaviour
     {
         //wiggle and look at direction
         body.transform.localPosition = new Vector3(0, Mathf.Sin(Time.time * 5 + randomStartWiggling) * 0.025f, 0);
-        body.transform.localEulerAngles = new Vector3(0, direction > 0 ? 0 : 180, 0);
 
+        body.transform.localEulerAngles = new Vector3(0, direction > 0 ? 0 : 180, -direction*movement.x * 10);
     }
 
     void ChangeWeapon(int newWeapon)
@@ -193,7 +202,7 @@ public class CharacterController2D : MonoBehaviour
 
 
     }
-    [SerializeField] Color color;
+    [SerializeField] public Color color;
     bool blinking = false;
     IEnumerator Blink()
     {
@@ -309,5 +318,13 @@ public class CharacterController2D : MonoBehaviour
             GameManager.End();
         }
         return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Vector3 crossAir = this.transform.position;
+        crossAir.x += aimAt.x;
+        crossAir.y += aimAt.y;
+        Gizmos.DrawSphere(crossAir, 0.05f);
     }
 }

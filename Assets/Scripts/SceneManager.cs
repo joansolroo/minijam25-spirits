@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class SceneManager : MonoBehaviour {
 
-    [SerializeField] public GameObject player;
+    [SerializeField] public CharacterController2D player;
     [SerializeField] public Follow playerFollow;
 
     void Start()
     {
-        playerFollow.target = player.transform;
+        playerFollow.target = player;
     }
 }

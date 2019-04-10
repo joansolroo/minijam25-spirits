@@ -45,6 +45,7 @@ public class EnemyController : MonoBehaviour
         {
             t += Time.deltaTime;
             controller.Move(new Vector2(Mathf.Sin(t * patrolSpeed) * patrolRange, 0));
+            controller.AimAt(transform.right);
         }
     }
 }

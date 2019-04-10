@@ -26,6 +26,14 @@ public class GameManager : MonoBehaviour
         StartCoroutine(Introduction());
     }
 
+    private void Update()
+    {
+        if(outro.activeSelf && Input.GetMouseButtonDown(0))
+        {
+            restart();
+        }
+    }
+
     int state = 0;
     // Update is called once per frame
 
@@ -42,6 +50,10 @@ public class GameManager : MonoBehaviour
 
     void restart()
     {
+        if (outro.activeSelf)
+        {
+            outro.SetActive(false);
+        }
         if (currentLevel != null)
         {
             currentLevel.SetActive(false);
